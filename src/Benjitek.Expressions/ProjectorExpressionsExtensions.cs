@@ -4,6 +4,20 @@ namespace Benjitek.Expressions;
 
 public static class ProjectorExpressionsExtensions
 {
+    private static Expression<Func<TParam, TProjectionResult>> CreateProjectedExpression<TParam, TProjectionResult>(
+        Expression[] expressions,
+        Expression projector
+        )
+    {
+        var parameter = Expression.Parameter(typeof(TParam), "param");
+
+        var args = expressions.Select(e => Expression.Invoke(e, parameter)).ToArray();
+
+        var projection = Expression.Invoke(projector, args);
+
+        return Expression.Lambda<Func<TParam, TProjectionResult>>(projection, parameter);
+    }
+
     /// <summary>
     ///     Returns a new expression that projects the result of the given expression.
     /// </summary>
@@ -27,16 +41,8 @@ public static class ProjectorExpressionsExtensions
     /// </returns>
     public static Expression<Func<TParam, TProjectionResult>> Project<TParam, TExpressionResult, TProjectionResult>(
         this Expression<Func<TParam, TExpressionResult>> expression,
-        Expression<Func<TExpressionResult, TProjectionResult>> projector)
-    {
-        var parameter = Expression.Parameter(typeof(TParam), "param");
-
-        var arg = Expression.Invoke(expression, parameter);
-
-        var projection = Expression.Invoke(projector, arg);
-
-        return Expression.Lambda<Func<TParam, TProjectionResult>>(projection, parameter);
-    }
+        Expression<Func<TExpressionResult, TProjectionResult>> projector
+        ) => CreateProjectedExpression<TParam, TProjectionResult>([expression], projector);
 
     /// <summary>
     ///     Returns a new expression that projects the result of the given expressions.
@@ -65,17 +71,7 @@ public static class ProjectorExpressionsExtensions
     public static Expression<Func<TParam, TProjectionResult>> Project<TParam, TExpressionResult1, TExpressionResult2, TProjectionResult>(
         this (Expression<Func<TParam, TExpressionResult1>>, Expression<Func<TParam, TExpressionResult2>>) expressions,
         Expression<Func<TExpressionResult1, TExpressionResult2, TProjectionResult>> projector
-        )
-    {
-        var parameter = Expression.Parameter(typeof(TParam), "param");
-
-        var arg1 = Expression.Invoke(expressions.Item1, parameter);
-        var arg2 = Expression.Invoke(expressions.Item2, parameter);
-
-        var projection = Expression.Invoke(projector, arg1, arg2);
-
-        return Expression.Lambda<Func<TParam, TProjectionResult>>(projection, parameter);
-    }
+        ) => CreateProjectedExpression<TParam, TProjectionResult>([expressions.Item1, expressions.Item2], projector);
 
     /// <summary>
     ///     Returns a new expression that projects the result of the given expressions.
@@ -107,18 +103,7 @@ public static class ProjectorExpressionsExtensions
     public static Expression<Func<TParam, TProjectionResult>> Project<TParam, TExpressionResult1, TExpressionResult2, TExpressionResult3, TProjectionResult>(
         this (Expression<Func<TParam, TExpressionResult1>>, Expression<Func<TParam, TExpressionResult2>>, Expression<Func<TParam, TExpressionResult3>>) expressions,
         Expression<Func<TExpressionResult1, TExpressionResult2, TExpressionResult3, TProjectionResult>> projector
-        )
-    {
-        var parameter = Expression.Parameter(typeof(TParam), "param");
-
-        var arg1 = Expression.Invoke(expressions.Item1, parameter);
-        var arg2 = Expression.Invoke(expressions.Item2, parameter);
-        var arg3 = Expression.Invoke(expressions.Item3, parameter);
-
-        var projection = Expression.Invoke(projector, arg1, arg2, arg3);
-
-        return Expression.Lambda<Func<TParam, TProjectionResult>>(projection, parameter);
-    }
+        ) => CreateProjectedExpression<TParam, TProjectionResult>([expressions.Item1, expressions.Item2, expressions.Item3], projector);
 
     /// <summary>
     ///     Returns a new expression that projects the result of the given expressions.
@@ -153,18 +138,6 @@ public static class ProjectorExpressionsExtensions
     public static Expression<Func<TParam, TProjectionResult>> Project<TParam, TExpressionResult1, TExpressionResult2, TExpressionResult3, TExpressionResult4, TProjectionResult>(
         this (Expression<Func<TParam, TExpressionResult1>>, Expression<Func<TParam, TExpressionResult2>>, Expression<Func<TParam, TExpressionResult3>>, Expression<Func<TParam, TExpressionResult4>>) expressions,
         Expression<Func<TExpressionResult1, TExpressionResult2, TExpressionResult3, TExpressionResult4, TProjectionResult>> projector
-        )
-    {
-        var parameter = Expression.Parameter(typeof(TParam), "param");
-
-        var arg1 = Expression.Invoke(expressions.Item1, parameter);
-        var arg2 = Expression.Invoke(expressions.Item2, parameter);
-        var arg3 = Expression.Invoke(expressions.Item3, parameter);
-        var arg4 = Expression.Invoke(expressions.Item4, parameter);
-
-        var projection = Expression.Invoke(projector, arg1, arg2, arg3, arg4);
-
-        return Expression.Lambda<Func<TParam, TProjectionResult>>(projection, parameter);
-    }
+        ) => CreateProjectedExpression<TParam, TProjectionResult>([expressions.Item1, expressions.Item2, expressions.Item3, expressions.Item4], projector);
 }
 
