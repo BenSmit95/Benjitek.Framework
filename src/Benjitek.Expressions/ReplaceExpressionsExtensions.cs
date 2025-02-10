@@ -23,7 +23,7 @@ public static class ReplaceExpressionsExtensions
     ///     The expression tree with the search expression replaced with the replace expression.
     /// </returns>
     public static TExpression Replace<TExpression>(
-        TExpression expression,
+        this TExpression expression,
         Expression search,
         Expression replace
         )

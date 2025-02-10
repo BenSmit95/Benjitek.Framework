@@ -17,7 +17,7 @@ public class ReplaceExpressionsExtensionsTests
                 var replace = Expression.Constant(2);
 
                 // Act
-                var result = ReplaceExpressionsExtensions.Replace(expression, search, replace);
+                var result = expression.Replace(search, replace);
 
                 // Assert
                 Assert.Equal(2, result.Compile()(0));
@@ -32,7 +32,7 @@ public class ReplaceExpressionsExtensionsTests
                 var replace = Expression.Constant(2);
 
                 // Act
-                var result = ReplaceExpressionsExtensions.Replace(expression, search, replace);
+                var result = expression.Replace(search, replace);
 
                 // Assert
                 Assert.NotSame(expression, result);
@@ -51,7 +51,7 @@ public class ReplaceExpressionsExtensionsTests
                 var replace = Expression.Constant(2);
 
                 // Act
-                var result = ReplaceExpressionsExtensions.Replace(expression, search, replace);
+                var result = expression.Replace(search, replace);
 
                 // Assert
                 Assert.Equal(4, result.Compile()());
@@ -68,7 +68,7 @@ public class ReplaceExpressionsExtensionsTests
                 var search = Expression.Constant(2);
                 var replace = Expression.Constant(2);
                 // Act
-                var result = ReplaceExpressionsExtensions.Replace(expression, search, replace);
+                var result = expression.Replace(search, replace);
                 // Assert
                 Assert.Same(expression, result);
             }
